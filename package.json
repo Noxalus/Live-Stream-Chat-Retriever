@@ -1,0 +1,10 @@
+{
+  "name": "live-stream-chat-retriever",
+  "version": "0.0.1",
+  "description": "Retrieve live streams chat messages from different sources (Twitch, YouTube Gaming, etc...)",
+  "author": "Noxalus",
+  "dependencies": {
+    "google-auth-library": "^0.9.7",
+    "googleapis": "3.1.0"
+  }
+}
