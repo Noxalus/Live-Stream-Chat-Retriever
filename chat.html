@@ -26,26 +26,6 @@
             font-weight: bold;
         }
 
-        .tag {
-            display: inline-block;
-            text-indent: 21px;
-            background-position: 0 center;
-            background-repeat: no-repeat;
-            display: inline-block;
-            vertical-align: bottom;
-            height: 18px;
-            min-width: 18px;
-            width: expression(document.body.clientWidth < $width ? "18px":"auto");
-            padding: 0;
-            margin-right: 3px;
-            margin-bottom: -1px;
-            text-indent: -9999px;
-            border-radius: 2px;
-            -moz-border-radius: 2px;
-            -webkit-border-radius: 2px;
-            overflow: hidden;
-        }
-
         .chat_line {
             margin-left: 3px;
             margin-right: 3px;
@@ -82,10 +62,7 @@
             var $newLine = $('<div></div>');
             $newLine.addClass('chat_line');
 
-            var $time = $('<span></span>');
-            $time.addClass('time_stamp')
-            $time.text(new Date().toLocaleTimeString().replace(/^(\d{0,2}):(\d{0,2}):(.*)$/i, '$1:$2'));
-            $newLine.append($time);
+            $newLine.attr('data-timestamp', data.date);
 
             var $formattedUser = $('<span></span>');
             $formattedUser.addClass('author');
@@ -95,17 +72,74 @@
 
             var $formattedMessage = $('<span></span>');
             $formattedMessage.addClass('message');
-
             $formattedMessage.html(data.message);
             $newLine.append($formattedMessage);
 
-            $newLine.wrap('<div>').parent().html();
+            Chat.vars.queue.push($newLine.wrap('<div>').parent().html());
+          },
+          vars: {
+            queue: [],
+            queueTimer: setInterval(function() {
+                if(Chat.vars.queue.length > 0) {
+                    // Add new pending messages
+                    var newLines = Chat.vars.queue.join('');
+                    Chat.vars.queue = [];
+                    $('#chat_box').append(newLines);
 
-            $('#chat_box').append($newLine);
+                    // If the max height has been reached, we clean all messages
+                    var totalHeight = Chat.vars.max_height;
+                    var currentHeight = $('#chat_box').outerHeight(true) + 5;
+                    var count = 0;
+                    var $chatLine, lineHeight;
+
+                    if (currentHeight > totalHeight) {
+                      while(currentHeight > totalHeight) {
+                          $chatLine = $('.chat_line').eq(count);
+                          lineHeight = $chatLine.height();
+
+                          $chatLine.animate(
+                              {
+                                  "margin-top": -lineHeight
+                              },
+                              100,
+                              function() {
+                                  $(this).remove();
+                              }
+                          );
+
+                          currentHeight -= lineHeight;
+                          count++;
+                      }
+
+                      return;
+                    }
+
+                    $('#chat_box')[0].scrollTop = $('#chat_box')[0].scrollHeight;
+
+                    // There are more messages than the maximum allowed
+                    var linesToDelete = $('#chat_box .chat_line').length - Chat.vars.max_messages;
+
+                    if(linesToDelete > 0) {
+                        for(var i=0; i<linesToDelete; i++) {
+                            $('#chat_box .chat_line').eq(0).remove();
+                        }
+                    }
+                } else {
+                    // Fade out messages that are shown during too long
+                    var messagePosted = $('#chat_box .chat_line').eq(0).data('timestamp');
+
+                    if((Date.now() - messagePosted) / 1000 >= Chat.vars.maxDisplayTime) {
+                        $('#chat_box .chat_line').eq(0).addClass('on_out').fadeOut(function() {
+                            $(this).remove();
+                        });
+                    }
+                }
+            }, 250),
+            maxDisplayTime: 100,
+            max_messages: 20,
+            max_height: 500,
           }
         };
-
-
 
         Chat.initialize('http://localhost:4242');
       </script>
