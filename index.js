@@ -11,7 +11,7 @@ var twitchApi = require('./twitch-api');
 function run(config) {
     // Initialize all APIs
     if (config.live_data.youtube.enabled)
-        youtubeApi.initialize();
+        youtubeApi.initialize(config);
 
     if (config.live_data.twitch.enabled)
         twitchApi.initialize(config);

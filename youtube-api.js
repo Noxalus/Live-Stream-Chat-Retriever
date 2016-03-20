@@ -1,5 +1,4 @@
 var fs = require('fs');
-var readline = require('readline');
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 var opener = require('opener');
@@ -19,17 +18,8 @@ var _isReady = false;
 var _lastCheckTime = new Date().getTime();
 var _auth = null;
 
-function initialize() {
-    // Load client secrets from a local file.
-    fs.readFile('config.json', function processClientSecrets(err, content) {
-        if (err) {
-            console.log('Error loading client secret file: ' + err);
-            return;
-        }
-
-        // Authorize a client with the loaded credentials, then call the Youtube API.
-        authorize(JSON.parse(content));
-    });
+function initialize(config) {
+    authorize(config);
 }
 
 function ready() {
