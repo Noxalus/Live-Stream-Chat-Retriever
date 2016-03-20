@@ -5,6 +5,12 @@ If you have an optical fiber connection, you might want to send your live stream
 
 The purpose of this project is to display an HTML page that will retrieve all chat messages from these different sources to display them in real time.
 
+## Features
+
+Supported services:
+* [Youtube Gaming](https://gaming.youtube.com/)
+* [Twitch](https://www.twitch.tv/)
+
 ## Prerequisites
 
 You need to install [Node.js](https://nodejs.org/en/download/) and launch `npm install` in the root folder.
@@ -18,13 +24,3 @@ To find your Youtube *client_id* and *client_secret*, you need to create OAuth 2
 Once that is done, you can run this command from the root folder: ``node index.js``
 
 Then, you should see the chat messages if you browse to [*http://localhost:4242*](http://localhost:4242).
-
-## TODO
-
-### To add
-* Support Twitch chat messages
-* Queue messages
-* Fade out old messages
-
-## To fix
-* Refresh Youtube token when it's not valid anymore
