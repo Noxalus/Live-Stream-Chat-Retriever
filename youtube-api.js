@@ -135,9 +135,7 @@ function getLiveBroadcast() {
                 apiError = true;
             } else {
                 var liveBroadcasts = response.items;
-                if (liveBroadcasts.length == 0) {
-                    console.log('No live broadcast found.');
-                } else {
+                if (liveBroadcasts.length > 0) {
                     var liveBroadcast = liveBroadcasts[0];
                     console.log('Live broadcast found');
                     console.log('Title: ' + liveBroadcast.snippet.title);
