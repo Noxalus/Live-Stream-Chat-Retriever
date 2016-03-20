@@ -17,12 +17,13 @@ function run(config) {
         twitchApi.initialize(config);
 
     var app = express();
-    var server = http.Server(app);
+    app.use(express.static('public'));
 
+    var server = http.Server(app);
     var io = socketio(server);
 
     app.get('/', function(req, res) {
-        res.sendFile(path.join(__dirname, 'chat.html'));
+        res.sendFile(path.join(__dirname, '/public/chat.html'));
     });
 
     config.live_data.youtube.redirect_uris.forEach(function(elt) {

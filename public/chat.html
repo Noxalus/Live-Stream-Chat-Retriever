@@ -20,27 +20,38 @@
             color: #D3D3D3;
             border-radius: 4px;
             width: calc(100% - 10px);
-        }
-
-        .author {
-            font-weight: bold;
+            -webkit-mask-image:-webkit-gradient(linear,left 10%,left top,from(rgba(0,0,0,1)),to(rgba(0,0,0,0)));
+            -webkit-mask-image:-webkit-gradient(linear,left 20%,left top,from(rgba(0,0,0,1)),to(rgba(0,0,0,0)))
         }
 
         .chat_line {
             margin-left: 3px;
-            margin-right: 3px;
+            margin-right: 0;
             padding-top: 2px;
             padding-bottom: 3px;
-            line-height: 16px;
+            font-size:18px;
+            line-height:21px;
+            background-color:rgba(127,127,127,0.00)
         }
 
         .chat_line .message {
-            /*word-break: break-all;*/
             word-wrap: break-word;
+            color:#fff;
+            font-weight:700;
+            line-height:21px;
+            text-shadow:0 0 1px #666,1px 1px 0 #000
+        }
+        
+        .chat_line .author{
+          text-transform:capitalize;
+          color:#000;
+          font-weight:700;
+          line-height:21px;
+          text-shadow:0 0 1px #666,1px 1px 0 #000
         }
 
-        .chat_line .time_stamp {
-            padding-right: 3px;
+        .chat_line .source_icon {
+          margin-left: 3px;
         }
       </style>
     </head>
@@ -63,6 +74,11 @@
             $newLine.addClass('chat_line');
 
             $newLine.attr('data-timestamp', data.date);
+
+            var $formattedSource = $('<span></span>');
+            $formattedSource.addClass('source_icon');
+            $formattedSource.html('<img src="img/' + data.source + '.png" />');
+            $newLine.append($formattedSource);
 
             var $formattedUser = $('<span></span>');
             $formattedUser.addClass('author');
@@ -135,7 +151,7 @@
                     }
                 }
             }, 250),
-            maxDisplayTime: 100,
+            maxDisplayTime: 1000,
             max_messages: 20,
             max_height: 500,
           }
