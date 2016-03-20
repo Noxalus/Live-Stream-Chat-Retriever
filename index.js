@@ -3,6 +3,7 @@ var express = require('express');
 var socketio = require('socket.io');
 var async = require('async');
 var fs = require('fs');
+var path = require('path');
 
 var youtubeApi = require('./youtube-api');
 var twitchApi = require('./twitch-api');
@@ -21,7 +22,7 @@ function run(config) {
     var io = socketio(server);
 
     app.get('/', function(req, res) {
-        res.sendFile('chat.html');
+        res.sendFile(path.join(__dirname, 'chat.html'));
     });
 
     config.live_data.youtube.redirect_uris.forEach(function(elt) {
