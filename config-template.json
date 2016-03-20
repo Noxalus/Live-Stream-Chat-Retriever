@@ -9,7 +9,7 @@
             "redirect_uris": ["http://localhost:4242/youtube/callback"]
         },
         "twitch": {
-            "enabled": false,
+            "enabled": true,
             "channel": "MY_CHANNEL"
         }
     }

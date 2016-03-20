@@ -9,6 +9,7 @@
     "google-auth-library": "^0.9.7",
     "googleapis": "3.1.0",
     "opener": "^1.4.1",
-    "socket.io": "^1.4.5"
+    "socket.io": "^1.4.5",
+    "tmi.js": "0.0.28"
   }
 }

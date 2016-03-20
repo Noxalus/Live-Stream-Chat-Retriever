@@ -1,14 +1,19 @@
 var http = require('http');
-var youtubeApi = require('./youtube-api');
 var express = require('express');
 var socketio = require('socket.io');
 var async = require('async');
 var fs = require('fs');
 
+var youtubeApi = require('./youtube-api');
+var twitchApi = require('./twitch-api');
+
 function run(config) {
     // Initialize all APIs
     if (config.live_data.youtube.enabled)
         youtubeApi.initialize();
+
+    if (config.live_data.twitch.enabled)
+        twitchApi.initialize(config);
 
     var app = express();
     var server = http.Server(app);
@@ -36,15 +41,17 @@ function run(config) {
     async.forever(
         function(next) {
 
-            if (config.live_data.youtube.enabled && youtubeApi.isReady())
-            {
+            if (config.live_data.youtube.enabled && youtubeApi.isReady()) {
                 youtubeApi.getNewMessages(function(data) { 
                     data.forEach(function(elt) { newMessages.push(elt); });
                 });
             }
 
-            // TODO: Push new messages from twitch API
-            // newMessages.push(twitchApi.getNewMessages());
+            if (config.live_data.twitch.enabled && twitchApi.isReady()) {
+                twitchApi.getNewMessages().forEach(function(elt) { 
+                    newMessages.push(elt); 
+                });
+            }
 
             if (newMessages.length > 0)
             {
