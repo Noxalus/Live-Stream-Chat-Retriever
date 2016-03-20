@@ -5,8 +5,8 @@ var async = require('async');
 var fs = require('fs');
 var path = require('path');
 
-var youtubeApi = require('./youtube-api');
-var twitchApi = require('./twitch-api');
+var youtubeApi = require('./api/youtube-api');
+var twitchApi = require('./api/twitch-api');
 
 function run(config) {
     // Initialize all APIs
