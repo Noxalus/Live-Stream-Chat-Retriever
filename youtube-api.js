@@ -65,11 +65,27 @@ function authorize(credentials) {
 function getNewToken() {
     var authUrl = _auth.generateAuthUrl({
         access_type: 'offline',
-        scope: SCOPES
+        scope: SCOPES,
+        approval_prompt: 'force'
     });
 
     console.log('Please select your Youtube account to get a token and use the API.');
     opener(authUrl);
+}
+
+function refreshToken() {
+    console.log('Refresh token');
+
+    _auth.refreshAccessToken(function(err, token){
+        if (err) {
+            console.log('Error trying to get a refreshed token: ' + err)
+        } else {
+            _auth.credentials = token; 
+            storeToken(token);
+
+            getLiveBroadcast();
+        }
+    })
 }
 
 function getToken(code) {
@@ -79,6 +95,7 @@ function getToken(code) {
             return;
         }
 
+        console.log(token);
         _auth.credentials = token;
         storeToken(token);
 
@@ -148,34 +165,40 @@ function getNewMessages(callback) {
     }, function(error, response) {
         if (error) {
             console.log('The API returned an error: ' + error);
+            refreshToken();
             return;
         }
 
         var messages = response.items;
-        var youtubeMessages = [];
+        var chatMessages = [];
 
         if (messages.length > 0) {
+
             for (var i = 0; i < messages.length; i++) {
                 var message = messages[i];
-                var messageTimestamp = new Date(message.snippet.publishedAt).getTime();
 
-                if (_lastCheckTime < messageTimestamp)
-                {
-                    var youtubeMessage = {
-                        author: message.authorDetails.displayName,
-                        message: message.snippet.textMessageDetails.messageText,
-                        source: 'youtube',
-                        date: messageTimestamp
-                    };
+                if (message.snippet.type == 'textMessageEvent') {
 
-                    youtubeMessages.push(youtubeMessage);
+                    var messageTimestamp = new Date(message.snippet.publishedAt).getTime();
+
+                    if (_lastCheckTime < messageTimestamp)
+                    {
+                        var chatMessage = {
+                            author: message.authorDetails.displayName,
+                            message: message.snippet.textMessageDetails.messageText,
+                            source: 'youtube',
+                            date: messageTimestamp
+                        };
+
+                        chatMessages.push(chatMessage);
+                    }
                 }
             }
 
-            if (youtubeMessages.length > 0)
-                _lastCheckTime = youtubeMessages[youtubeMessages.length - 1].date;
+            if (chatMessages.length > 0)
+                _lastCheckTime = chatMessages[chatMessages.length - 1].date;
 
-            callback(youtubeMessages);
+            callback(chatMessages);
         }
     });
 }
