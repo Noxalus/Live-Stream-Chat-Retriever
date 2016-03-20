@@ -4,7 +4,11 @@
   "description": "Retrieve live streams chat messages from different sources (Twitch, YouTube Gaming, etc...)",
   "author": "Noxalus",
   "dependencies": {
+    "async": "^2.0.0-rc.1",
+    "express": "^4.10.2",
     "google-auth-library": "^0.9.7",
-    "googleapis": "3.1.0"
+    "googleapis": "3.1.0",
+    "opener": "^1.4.1",
+    "socket.io": "^1.4.5"
   }
 }
