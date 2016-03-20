@@ -27,7 +27,7 @@ function initialize(config) {
         var chatMessage = {
             author: user.username,
             message: message,
-            source: 'youtube',
+            source: 'twitch',
             date: new Date().getTime()
         };
 
