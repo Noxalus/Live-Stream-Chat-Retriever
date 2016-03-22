@@ -1,0 +1,50 @@
+body {
+    overflow: hidden;
+    margin: 5px;
+}
+
+#chat_box {
+    background-color: transparent;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+    position: absolute;
+    overflow: hidden;
+    color: #D3D3D3;
+    border-radius: 4px;
+    width: calc(100% - 10px);
+    -webkit-mask-image:-webkit-gradient(linear,left 10%,left top,from(rgba(0,0,0,1)),to(rgba(0,0,0,0)));
+    -webkit-mask-image:-webkit-gradient(linear,left 20%,left top,from(rgba(0,0,0,1)),to(rgba(0,0,0,0)))
+}
+
+.chat_line {
+    margin-left: 3px;
+    margin-right: 0;
+    padding-top: 2px;
+    padding-bottom: 3px;
+    font-size:18px;
+    line-height:21px;
+    background-color:rgba(127,127,127,0.00)
+}
+
+.chat_line .message {
+    word-wrap: break-word;
+    color:#fff;
+    font-weight:700;
+    line-height:21px;
+    text-shadow:0 0 1px #666,1px 1px 0 #000
+}
+
+.chat_line .author{
+    text-transform:capitalize;
+    color:#000;
+    font-weight:700;
+    line-height:21px;
+    text-shadow:0 0 1px #666,1px 1px 0 #000
+}
+
+.chat_line .source_icon {
+    margin-left: 3px;
+}
