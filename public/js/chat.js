@@ -20,6 +20,10 @@ Chat = {
 
     var $formattedUser = $('<span></span>');
     $formattedUser.addClass('author');
+
+    if (data.color)
+      $formattedUser.css('color', data.color);
+    
     $formattedUser.html(data.author);
     $newLine.append($formattedUser);
     $newLine.append('<span class="colon">:</span>&nbsp;');

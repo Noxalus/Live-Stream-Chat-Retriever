@@ -28,7 +28,8 @@ function initialize(config) {
 
     client.on("chat", function (channel, user, message, self) {
         var chatMessage = {
-            author: user.username,
+            author: user['display-name'],
+            color: user['color'],
             message: message,
             source: 'twitch',
             date: new Date().getTime()

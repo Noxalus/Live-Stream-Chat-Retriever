@@ -17,6 +17,18 @@ var _liveChatId = '';
 var _isReady = false;
 var _lastCheckTime = new Date().getTime();
 var _auth = null;
+var _userColorsMap = {};
+
+function getRandomColor() {
+    var letters = '0123456789ABCDEF'.split('');
+    var color = '#';
+    
+    for (var i = 0; i < 6; i++ ) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+
+    return color;
+}
 
 function initialize(config) {
     authorize(config);
@@ -171,11 +183,17 @@ function getNewMessages(callback) {
 
                     if (_lastCheckTime < messageTimestamp)
                     {
+                        var author = message.authorDetails.displayName;
+
+                        if (!(author in _userColorsMap))
+                            _userColorsMap[author] = getRandomColor();
+
                         var chatMessage = {
-                            author: message.authorDetails.displayName,
+                            author: author,
                             message: message.snippet.textMessageDetails.messageText,
                             source: 'youtube',
-                            date: messageTimestamp
+                            date: messageTimestamp,
+                            color: _userColorsMap[author]
                         };
 
                         chatMessages.push(chatMessage);
