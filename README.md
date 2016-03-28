@@ -17,10 +17,12 @@ You need to install [Node.js](https://nodejs.org/en/download/) and launch `npm i
 
 ## Usage
 
-Rename the *config-template.json* file to **config.json** and complete the missing information.
+Rename the *config-template.json* file to **config.json** and complete the missing information with yours.
 
 To find your Youtube *client_id* and *client_secret*, you need to create OAuth 2.0 credientials. The [official documentation](https://developers.google.com/youtube/registering_an_application) explains how to do that. Please make sure that you added all redirect URIs from the **redirect_uris** array into your application when you create your OAuth 2.0 credentials.
 
-Once that is done, you can run this command from the root folder: ``node index.js``
+Once that is done, you can run this command from the root folder to automatically download all dependencies: ``npm install``
+
+Then, to start the server, just run this: ``npm start``
 
 Then, you should see the chat messages if you browse to [*http://localhost:4242*](http://localhost:4242).
