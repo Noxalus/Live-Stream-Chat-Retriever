@@ -95,4 +95,4 @@ Chat = {
   }
 };
 
-Chat.initialize('http://localhost:4242');
+Chat.initialize(window.location.origin + ':4242');
