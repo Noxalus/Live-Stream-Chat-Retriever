@@ -11,7 +11,7 @@ function initialize(config) {
 
     var options = {
         options: {
-            debug: true
+            debug: false
         },
         connection: {
             cluster: "aws",
@@ -31,6 +31,7 @@ function initialize(config) {
             author: user['display-name'],
             color: user['color'],
             message: message,
+            emotes: user['emotes'],
             source: 'twitch',
             date: new Date().getTime()
         };

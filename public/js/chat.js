@@ -7,6 +7,50 @@ function getParameterByName(name) {
 }
 
 Twitch = {
+    emoteTemplate: function(id) {
+        return '<img class="emoticon ttv-emo-' + id + '" src="//static-cdn.jtvnw.net/emoticons/v1/' + id + '/1.0" srcset="//static-cdn.jtvnw.net/emoticons/v1/' + id + '/2.0 2x" />';
+    },
+    emoticonize: function(message, emotes) {
+        if(!emotes) return [message];
+
+        var tokenizedMessage = [];
+        var emotesList = Object.keys(emotes);
+        var replacements = [];
+
+        emotesList.forEach(function(id) {
+            var emote = emotes[id];
+
+            for(var i=emote.length-1; i>=0; i--) {
+                indexes = emote[i].split('-');
+                replacements.push({ id: id, first: indexes[0], last: indexes[1] });
+            }
+        });
+
+        replacements.sort(function(a, b) {
+            return b.first - a.first;
+        });
+
+        // Tokenizes each character into an array
+        // punycode deals with unicode symbols on surrogate pairs
+        // punycode is used in the replacements loop below as well
+        message = punycode.ucs2.decode(message);
+
+        replacements.forEach(function(replacement) {
+            // Unshift the end of the message (that doesn't contain the emote)
+            tokenizedMessage.unshift(punycode.ucs2.encode(message.slice(replacement.last + 1)));
+
+            // Unshift the emote HTML (but not as a string to allow us to process links and escape html still)
+            tokenizedMessage.unshift([ Twitch.emoteTemplate(replacement.id) ]);
+
+            // Splice the unparsed piece of the message
+            message = message.slice(0, replacement.first);
+        });
+
+        // Unshift the remaining part of the message (that contains no emotes)
+        tokenizedMessage.unshift(punycode.ucs2.encode(message));
+
+        return tokenizedMessage;
+    }
 };
 
 Chat = {
@@ -42,9 +86,27 @@ Chat = {
       $newLine.append($formattedUser);
       $newLine.append('<span class="colon">:</span>&nbsp;');
 
+      message = data.message;
+
+      // Replace emotes by their corresponding images
+      if(data.emotes) {
+
+          if (data.source == 'twitch') {
+            var tokenizedMessage = Twitch.emoticonize(message, data.emotes);
+
+            for(var i = 0; i < tokenizedMessage.length; i++) {
+                if(typeof tokenizedMessage[i] !== 'string') {
+                    tokenizedMessage[i] = tokenizedMessage[i][0];
+                }
+            }
+
+            message = tokenizedMessage.join(' ');
+          }
+      }
+
       var $formattedMessage = $('<span></span>');
       $formattedMessage.addClass('message');
-      $formattedMessage.html(data.message);
+      $formattedMessage.html(message);
       $newLine.append($formattedMessage);
 
       Chat.vars.queue.push($newLine.wrap('<div>').parent().html());
