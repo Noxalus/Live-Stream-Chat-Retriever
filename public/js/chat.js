@@ -57,6 +57,13 @@ Chat = {
   initialize: function (url) {
       var socket = io(url);
 
+      console.log('Trying to connect to: ' + url);
+
+      socket.on('connected', function()
+      {
+          console.log('Connected to: ' + url);
+      });
+
       socket.on('message', function(data) {
           console.log('New message', data);
           Chat.insert(data)
@@ -151,5 +158,5 @@ Chat = {
 };
 
 $(document).ready(function() {
-    Chat.initialize(window.location.origin + ':4242');
+    Chat.initialize(window.location.origin);
 });
