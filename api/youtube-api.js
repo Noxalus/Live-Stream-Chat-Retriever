@@ -19,6 +19,7 @@ var _isReady = false;
 var _lastCheckTime = new Date().getTime();
 var _auth = null;
 var _userColorsMap = {};
+var _newMessages = [];
 
 function getRandomColor() {
     var letters = '0123456789ABCDEF'.split('');
@@ -38,6 +39,15 @@ function initialize(config) {
 function ready() {
     winston.info('Youtube API is ready to use');
     _isReady = true;
+
+    _newMessages.push({
+        type: 'system',
+        source: 'youtube',
+        date: new Date().getTime(),
+        message: 'ready'
+    });
+
+    startMessagePolling();
 }
 
 function isReady() {
@@ -73,7 +83,13 @@ function getNewToken() {
     });
 
     winston.info('Please select your Youtube account to get a token and use the API.');
-    opener(authUrl);
+    // opener(authUrl);
+    _newMessages.push({
+        type: 'system',
+        source: 'youtube',
+        date: new Date().getTime(),
+        message: 'auth-url|' + authUrl
+    });
 }
 
 function refreshToken() {
@@ -122,6 +138,7 @@ function storeToken(token) {
 function getLiveBroadcast() {
     var isLive = false;
     var apiError = false;
+    var noLiveBroadcastFound = false;
 
     async.whilst(
     function () { return !isLive && !apiError; },
@@ -139,6 +156,7 @@ function getLiveBroadcast() {
             } else {
                 var liveBroadcasts = response.items;
                 if (liveBroadcasts.length > 0) {
+                    noLiveBroadcastFound = false;
                     var liveBroadcast = liveBroadcasts[0];
                     winston.info('Live broadcast found');
                     winston.info('Title: ' + liveBroadcast.snippet.title);
@@ -147,8 +165,9 @@ function getLiveBroadcast() {
                     _liveChatId = liveBroadcast.snippet.liveChatId;
                     isLive = true;
                 }
-                else
+                else if (noLiveBroadcastFound == false)
                 {
+                    noLiveBroadcastFound = true;
                     winston.error('No broadcast live detected');
                 }
             }
@@ -162,7 +181,17 @@ function getLiveBroadcast() {
     });
 }
 
-function getNewMessages(callback) {
+function getNewMessages() {
+    if (_newMessages.length == 0)
+        return [];
+
+    var newMessage = _newMessages;
+    _newMessages = [];
+
+    return newMessage;
+}
+
+function getChatMessages() {
     _youtube.liveChatMessages.list({
         auth: _auth,
         part: 'snippet,authorDetails',
@@ -178,12 +207,10 @@ function getNewMessages(callback) {
         var chatMessages = [];
 
         if (messages.length > 0) {
-
             for (var i = 0; i < messages.length; i++) {
                 var message = messages[i];
 
                 if (message.snippet.type == 'textMessageEvent') {
-
                     var messageTimestamp = new Date(message.snippet.publishedAt).getTime();
 
                     if (_lastCheckTime < messageTimestamp)
@@ -194,6 +221,7 @@ function getNewMessages(callback) {
                             _userColorsMap[author] = getRandomColor();
 
                         var chatMessage = {
+                            type: 'chat',
                             author: author,
                             message: message.snippet.textMessageDetails.messageText,
                             source: 'youtube',
@@ -207,11 +235,16 @@ function getNewMessages(callback) {
             }
 
             if (chatMessages.length > 0)
+            {
+                _newMessages = _newMessages.concat(chatMessages);
                 _lastCheckTime = chatMessages[chatMessages.length - 1].date;
-
-            callback(chatMessages);
+            }
         }
     });
+}
+
+function startMessagePolling() {
+    setInterval(getChatMessages, 1000);
 }
 
 exports.initialize = initialize;

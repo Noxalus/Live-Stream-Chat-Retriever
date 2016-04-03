@@ -33,6 +33,10 @@ winston.add(winston.transports.File, {
 var youtubeApi = require('./api/youtube-api');
 var twitchApi = require('./api/twitch-api');
 
+var chatMessageId = 0;
+var chatMessages = [];
+var systemMessages = [];
+
 function run(config) {
     // Initialize all APIs
     if (config.live_data.youtube.enabled)
@@ -48,7 +52,19 @@ function run(config) {
     var io = socketio(server);
 
     io.on('connection', function(socket) {
+        winston.info('Someone has connected to the chat');
         socket.emit('connected');
+
+        // Send only the last 10 messages
+        chatMessagesToSend = chatMessages.slice(Math.max(chatMessages.length - 10, 0));
+        chatMessagesToSend.forEach(function(elt) {
+            io.emit('newChatMessage', elt);                
+        });
+
+        // Send system messages
+        systemMessages.forEach(function(elt) {
+            io.emit('newSystemMessage', elt);                
+        });
     });
 
     app.get('/', function(req, res) {
@@ -59,7 +75,7 @@ function run(config) {
         var endpoint = elt.replace(config.host + ':' + config.port, '');
         app.get(endpoint, function(req, res){
           youtubeApi.getToken(req.query.code);
-          res.send('<h1>New Youtube token successfully retrieved.</h1>');
+          res.redirect('/');
         });
     });
 
@@ -72,9 +88,9 @@ function run(config) {
     async.forever(
         function(next) {
 
-            if (config.live_data.youtube.enabled && youtubeApi.isReady()) {
-                youtubeApi.getNewMessages(function(data) { 
-                    data.forEach(function(elt) { newMessages.push(elt); });
+            if (config.live_data.youtube.enabled) {
+                youtubeApi.getNewMessages().forEach(function(elt) { 
+                    newMessages.push(elt); 
                 });
             }
 
@@ -88,8 +104,21 @@ function run(config) {
             {
                 winston.info(newMessages);
 
-                newMessages.forEach(function(elt, index, array) {
-                    io.emit('message', elt);                
+                newMessages.forEach(function(elt) {
+                    if (elt.type == 'chat') {
+                        // Affect a unique id to each message
+                        elt.id = chatMessageId;
+                        chatMessageId++;
+
+                        chatMessages.push(elt);
+
+                        io.emit('newChatMessage', elt);
+                    }
+                    else if (elt.type == 'system') {
+                        systemMessages.push(elt);
+
+                        io.emit('newSystemMessage', elt);
+                    }        
                 });
 
                 newMessages = [];

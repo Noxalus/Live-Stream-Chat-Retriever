@@ -29,6 +29,7 @@ function initialize(config) {
 
     client.on("chat", function (channel, user, message, self) {
         var chatMessage = {
+            type: 'chat',
             author: user['display-name'],
             color: user['color'],
             message: message,
@@ -46,6 +47,13 @@ function initialize(config) {
 function ready() {
     winston.info('Twitch API is ready to use');
     _isReady = true;
+
+    _newMessages.push({
+        type: 'system',
+        source: 'twitch',
+        date: new Date().getTime(),
+        message: 'ready'
+    });
 }
 
 function isReady() {
