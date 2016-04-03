@@ -3,7 +3,7 @@ body {
     margin: 5px;
 }
 
-#chat_box {
+#chat-box {
     background-color: transparent;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 13px;
@@ -19,7 +19,7 @@ body {
     -webkit-mask-image:-webkit-gradient(linear,left 20%,left top,from(rgba(0,0,0,1)),to(rgba(0,0,0,0)))
 }
 
-.chat_line {
+.chat-line {
     margin-left: 3px;
     margin-right: 0;
     padding-top: 2px;
@@ -29,7 +29,7 @@ body {
     background-color:rgba(127,127,127,0.00)
 }
 
-.chat_line .message {
+.chat-line .message {
     word-wrap: break-word;
     color:#fff;
     font-weight:700;
@@ -37,7 +37,7 @@ body {
     text-shadow:0 0 1px #666,1px 1px 0 #000
 }
 
-.chat_line .author{
+.chat-line .author{
     text-transform:capitalize;
     color:#000;
     font-weight:700;
@@ -45,7 +45,7 @@ body {
     text-shadow:0 0 1px #666,1px 1px 0 #000
 }
 
-.chat_line .source_icon {
+.chat-line .source_icon {
     margin-right: 3px;
     vertical-align: middle;
 }

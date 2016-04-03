@@ -53,9 +53,50 @@ Twitch = {
     }
 };
 
+System = {
+  handleMessage: function(data) {
+    var message = data.message.split('|');
+    var type = message[0];
+    var value = message[1];
+
+    switch (data.source) {
+      case 'youtube':
+        switch(type) {
+          case 'auth-url':
+            console.log('You need to generate a new auth Token with this link: ' + value);
+
+            var youtubeStatus = $('#youtube-status');
+            youtubeStatus.html('<a href="' + value + '">YOUTUBE</a>');
+            break;
+          case 'ready':
+            console.log('Youtube API is ready');
+
+            var youtubeStatus = $('#youtube-status');
+            youtubeStatus.addClass('ready');
+            break;
+        }
+        break;
+      case 'twitch':
+        switch(type) {
+          case 'ready':
+            console.log('Twitch API is ready');
+
+            var twitchStatus = $('#twitch-status');
+            twitchStatus.addClass('ready');
+            break;
+        }
+        break;
+    }
+  }
+};
+
 Chat = {
   initialize: function (url) {
       var socket = io(url);
+
+      window.noxalus = {
+        socket: socket
+      };
 
       console.log('Trying to connect to: ' + url);
 
@@ -64,9 +105,13 @@ Chat = {
           console.log('Connected to: ' + url);
       });
 
-      socket.on('message', function(data) {
+      socket.on('newChatMessage', function(data) {
           console.log('New message', data);
           Chat.insert(data)
+      });
+
+      socket.on('newSystemMessage', function(data) {
+          System.handleMessage(data);
       });
 
       console.log('Display time: ' + Chat.vars.displayTime);
@@ -74,7 +119,7 @@ Chat = {
   },
   insert: function(data) {
       var $newLine = $('<div></div>');
-      $newLine.addClass('chat_line');
+      $newLine.addClass('chat-line');
 
       $newLine.attr('data-timestamp', data.date);
 
@@ -125,27 +170,27 @@ Chat = {
               // Add new pending messages
               var newLines = Chat.vars.queue.join('');
               Chat.vars.queue = [];
-              $('#chat_box').append(newLines);
+              $('#chat-box').append(newLines);
 
-              $('#chat_box')[0].scrollTop = $('#chat_box')[0].scrollHeight;
+              $('#chat-box')[0].scrollTop = $('#chat-box')[0].scrollHeight;
 
               // There are more messages than the maximum allowed
               if (Chat.vars.maxMessages > 0) {
-                  var linesToDelete = $('#chat_box .chat_line').length - Chat.vars.maxMessages;
+                  var linesToDelete = $('#chat-box .chat-line').length - Chat.vars.maxMessages;
 
                   if(linesToDelete > 0) {
                       for(var i=0; i<linesToDelete; i++) {
-                          $('#chat_box .chat_line').eq(0).remove();
+                          $('#chat-box .chat-line').eq(0).remove();
                       }
                   }
               }
           } else {
               // Fade out messages that are shown during too long
               if (Chat.vars.displayTime > 0) {
-                  var messagePosted = $('#chat_box .chat_line').eq(0).data('timestamp');
+                  var messagePosted = $('#chat-box .chat-line').eq(0).data('timestamp');
 
                   if((Date.now() - messagePosted) / 1000 >= Chat.vars.displayTime) {
-                      $('#chat_box .chat_line').eq(0).addClass('on_out').fadeOut(function() {
+                      $('#chat-box .chat-line').eq(0).addClass('on_out').fadeOut(function() {
                           $(this).remove();
                       });
                   }

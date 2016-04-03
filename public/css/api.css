@@ -1,0 +1,14 @@
+#api-status {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+#api-status li {
+    display: inline;
+    background-color: red;
+}
+
+#api-status .ready {
+    background-color: green !important;
+}
