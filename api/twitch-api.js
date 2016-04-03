@@ -1,6 +1,7 @@
 var fs = require('fs');
 var readline = require('readline');
 var irc = require("tmi.js");
+var winston = require('winston');
 
 var _config = null;
 var _isReady = false;
@@ -43,7 +44,7 @@ function initialize(config) {
 }
 
 function ready() {
-    console.log('Twitch API is ready to use');
+    winston.info('Twitch API is ready to use');
     _isReady = true;
 }
 

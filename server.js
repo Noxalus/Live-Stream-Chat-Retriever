@@ -4,6 +4,31 @@ var socketio = require('socket.io');
 var async = require('async');
 var fs = require('fs');
 var path = require('path');
+var mkdirp = require('mkdirp');
+var winston = require('winston');
+
+// Setup the logger
+winston.addColors({
+    debug: 'green',
+    info: 'cyan',
+    silly: 'magenta',
+    warn:  'yellow',
+    error: 'red'
+});
+
+winston.add(winston.transports.File, { 
+    name: 'info', 
+    filename: './logs/info.log', 
+    level: 'info',
+    colorize: true
+});
+
+winston.add(winston.transports.File, { 
+    name: 'error', 
+    filename: './logs/error.log', 
+    level: 'error',
+    colorize: true 
+});
 
 var youtubeApi = require('./api/youtube-api');
 var twitchApi = require('./api/twitch-api');
@@ -22,6 +47,10 @@ function run(config) {
     var server = http.Server(app);
     var io = socketio(server);
 
+    io.on('connection', function(socket) {
+        socket.emit('connected');
+    });
+
     app.get('/', function(req, res) {
         res.sendFile(path.join(__dirname, '/public/chat.html'));
     });
@@ -35,7 +64,7 @@ function run(config) {
     });
 
     server.listen(config.port, function() {
-        console.log('listening on *: ' + config.port);
+        winston.info('listening on *: ' + config.port);
     });
 
     // Retrieve new messages
@@ -57,7 +86,7 @@ function run(config) {
 
             if (newMessages.length > 0)
             {
-                console.log(newMessages);
+                winston.info(newMessages);
 
                 newMessages.forEach(function(elt, index, array) {
                     io.emit('message', elt);                
@@ -69,23 +98,29 @@ function run(config) {
             setTimeout(next, 1000);
         },
         function(err) {
-            console.log('Error retrieving new messages: ' + err);
+            winston.error('Error retrieving new messages: ' + err);
         }
     );
 
 }
 
+// Create a new directory for log files
+mkdirp('./logs', function(err) {
+    if (err) 
+        winston.error('Unable to create the log folder', err);
+});
+
 // Load config file
 fs.readFile('config.json', function (err, config) {
     if (err) {
-        console.log('Error loading config file: ' + err);
+        winston.error('Error loading config file: ' + err);
         return;
     }
 
     config = JSON.parse(config);
 
     if (!config.host || !config.port) {
-        console.log('Error loading config file: host or port is missing!');
+        winston.error('Error loading config file: host or port is missing!');
         return;
     }
 

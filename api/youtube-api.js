@@ -3,6 +3,7 @@ var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 var opener = require('opener');
 var async = require('async');
+var winston = require('winston');
 
 var SCOPES = [
     'https://www.googleapis.com/auth/youtube.readonly',
@@ -35,7 +36,7 @@ function initialize(config) {
 }
 
 function ready() {
-    console.log('Youtube API is ready to use');
+    winston.info('Youtube API is ready to use');
     _isReady = true;
 }
 
@@ -57,7 +58,7 @@ function authorize(credentials) {
             getNewToken();
         } else {
             _auth.credentials = JSON.parse(token);
-            console.log('Get stored token');
+            winston.info('Get stored token');
             
             getLiveBroadcast();
         }
@@ -71,16 +72,16 @@ function getNewToken() {
         approval_prompt: 'force'
     });
 
-    console.log('Please select your Youtube account to get a token and use the API.');
+    winston.info('Please select your Youtube account to get a token and use the API.');
     opener(authUrl);
 }
 
 function refreshToken() {
-    console.log('Refresh token');
+    winston.info('Refresh token');
 
     _auth.refreshAccessToken(function(err, token){
         if (err) {
-            console.log('Error trying to get a refreshed token: ' + err)
+            winston.error('Error trying to get a refreshed token: ' + err)
         } else {
             _auth.credentials = token; 
             storeToken(token);
@@ -93,11 +94,11 @@ function refreshToken() {
 function getToken(code) {
     _auth.getToken(code, function(err, token) {
         if (err) {
-            console.log('Error while trying to retrieve access token', err);
+            winston.error('Error while trying to retrieve access token', err);
             return;
         }
 
-        console.log(token);
+        winston.info(token);
         _auth.credentials = token;
         storeToken(token);
 
@@ -115,7 +116,7 @@ function storeToken(token) {
     }
 
   fs.writeFile(TOKEN_PATH, JSON.stringify(token));
-  console.log('Token stored to ' + TOKEN_PATH);
+  winston.info('Token stored to ' + TOKEN_PATH);
 }
 
 function getLiveBroadcast() {
@@ -132,19 +133,23 @@ function getLiveBroadcast() {
             broadcastType: 'all'
         }, function(error, response) {
             if (error) {
-                console.log('The API returned an error: ' + error);
+                winston.error('The API returned an error: ' + error);
                 getNewToken();
                 apiError = true;
             } else {
                 var liveBroadcasts = response.items;
                 if (liveBroadcasts.length > 0) {
                     var liveBroadcast = liveBroadcasts[0];
-                    console.log('Live broadcast found');
-                    console.log('Title: ' + liveBroadcast.snippet.title);
-                    console.log('Description: ' + liveBroadcast.snippet.description);
+                    winston.info('Live broadcast found');
+                    winston.info('Title: ' + liveBroadcast.snippet.title);
+                    winston.info('Description: ' + liveBroadcast.snippet.description);
 
                     _liveChatId = liveBroadcast.snippet.liveChatId;
                     isLive = true;
+                }
+                else
+                {
+                    winston.error('No broadcast live detected');
                 }
             }
         });
@@ -164,7 +169,7 @@ function getNewMessages(callback) {
         liveChatId: _liveChatId
     }, function(error, response) {
         if (error) {
-            console.log('The API returned an error: ' + error);
+            winston.error('The API returned an error: ' + error);
             refreshToken();
             return;
         }
