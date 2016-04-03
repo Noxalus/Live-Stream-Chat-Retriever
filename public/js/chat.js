@@ -204,4 +204,9 @@ Chat = {
 
 $(document).ready(function() {
     Chat.initialize(window.location.origin);
+
+    // Hide API status?
+    if (getParameterByName('hide_api_status')) {
+      $('#api-status').remove();
+    }
 });
