@@ -6,50 +6,34 @@ function getParameterByName(name) {
     return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
+Youtube = {
+    parseEmoji: function(text) {
+        return jEmoji.unifiedToHTML(message);
+    }
+};
+
 Twitch = {
     emoteTemplate: function(id) {
         return '<img class="emoticon ttv-emo-' + id + '" src="//static-cdn.jtvnw.net/emoticons/v1/' + id + '/1.0" srcset="//static-cdn.jtvnw.net/emoticons/v1/' + id + '/2.0 2x" />';
     },
-    emoticonize: function(message, emotes) {
-        if(!emotes) return [message];
 
-        var tokenizedMessage = [];
-        var emotesList = Object.keys(emotes);
-        var replacements = [];
-
-        emotesList.forEach(function(id) {
-            var emote = emotes[id];
-
-            for(var i=emote.length-1; i>=0; i--) {
-                indexes = emote[i].split('-');
-                replacements.push({ id: id, first: indexes[0], last: indexes[1] });
+    formatEmotes: function(text, emotes) {
+        var splitText = text.split('');
+        for(var i in emotes) {
+            var e = emotes[i];
+            for(var j in e) {
+                var mote = e[j];
+                if(typeof mote == 'string') {
+                    mote = mote.split('-');
+                    mote = [parseInt(mote[0]), parseInt(mote[1])];
+                    var length =  mote[1] - mote[0],
+                        empty = Array.apply(null, new Array(length + 1)).map(function() { return '' });
+                    splitText = splitText.slice(0, mote[0]).concat(empty).concat(splitText.slice(mote[1] + 1, splitText.length));
+                    splitText.splice(mote[0], 1, Twitch.emoteTemplate(i));
+                }
             }
-        });
-
-        replacements.sort(function(a, b) {
-            return b.first - a.first;
-        });
-
-        // Tokenizes each character into an array
-        // punycode deals with unicode symbols on surrogate pairs
-        // punycode is used in the replacements loop below as well
-        message = punycode.ucs2.decode(message);
-
-        replacements.forEach(function(replacement) {
-            // Unshift the end of the message (that doesn't contain the emote)
-            tokenizedMessage.unshift(punycode.ucs2.encode(message.slice(replacement.last + 1)));
-
-            // Unshift the emote HTML (but not as a string to allow us to process links and escape html still)
-            tokenizedMessage.unshift([ Twitch.emoteTemplate(replacement.id) ]);
-
-            // Splice the unparsed piece of the message
-            message = message.slice(0, replacement.first);
-        });
-
-        // Unshift the remaining part of the message (that contains no emotes)
-        tokenizedMessage.unshift(punycode.ucs2.encode(message));
-
-        return tokenizedMessage;
+        }
+        return splitText.join('');
     }
 };
 
@@ -140,24 +124,16 @@ Chat = {
 
       message = data.message;
 
-      // Replace emotes by their corresponding images
-      if(data.emotes) {
-
-          if (data.source == 'twitch') {
-            var tokenizedMessage = Twitch.emoticonize(message, data.emotes);
-
-            for(var i = 0; i < tokenizedMessage.length; i++) {
-                if(typeof tokenizedMessage[i] !== 'string') {
-                    tokenizedMessage[i] = tokenizedMessage[i][0];
-                }
-            }
-
-            message = tokenizedMessage.join(' ');
-          }
+      // Replace emotes/emojis by their corresponding images
+      switch (data.source) {
+        case 'twitch':
+            if(data.emotes)
+              message = Twitch.formatEmotes(message, data.emotes);
+            break;
+        case 'youtube':
+            message = Youtube.parseEmoji(message);
+            break;
       }
-
-      if (data.source == 'youtube')
-        message = jEmoji.unifiedToHTML(message);
 
       var $formattedMessage = $('<span></span>');
       $formattedMessage.addClass('message');
