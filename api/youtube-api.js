@@ -37,7 +37,7 @@ function initialize(config) {
 }
 
 function ready() {
-    winston.info('Youtube API is ready to use');
+    winston.info('Youtube API is ready to use', { source: 'youtube' });
     _isReady = true;
 
     _newMessages.push({
@@ -68,7 +68,7 @@ function authorize(credentials) {
             getNewToken();
         } else {
             _auth.credentials = JSON.parse(token);
-            winston.info('Get stored token');
+            winston.info('Get stored token', { source: 'youtube' });
             
             getLiveBroadcast();
         }
@@ -82,7 +82,7 @@ function getNewToken() {
         approval_prompt: 'force'
     });
 
-    winston.info('Please select your Youtube account to get a token and use the API.');
+    winston.info('Please select your Youtube account to get a token and use the API.', { source: 'youtube' });
     // opener(authUrl);
     _newMessages.push({
         type: 'system',
@@ -93,11 +93,11 @@ function getNewToken() {
 }
 
 function refreshToken() {
-    winston.info('Refresh token');
+    winston.info('Refresh token', { source: 'youtube' });
 
     _auth.refreshAccessToken(function(err, token){
         if (err) {
-            winston.error('Error trying to get a refreshed token: ' + err)
+            winston.error('Error trying to get a refreshed token: ' + err, { source: 'youtube' })
         } else {
             _auth.credentials = token; 
             storeToken(token);
@@ -110,11 +110,12 @@ function refreshToken() {
 function getToken(code) {
     _auth.getToken(code, function(err, token) {
         if (err) {
-            winston.error('Error while trying to retrieve access token', err);
+            winston.error('Error while trying to retrieve access token', { source: 'youtube' });
+            winston.error(err, { source: 'youtube' });
             return;
         }
 
-        winston.info(token);
+        winston.info(token, { source: 'youtube' });
         _auth.credentials = token;
         storeToken(token);
 
@@ -132,7 +133,7 @@ function storeToken(token) {
     }
 
   fs.writeFile(TOKEN_PATH, JSON.stringify(token));
-  winston.info('Token stored to ' + TOKEN_PATH);
+  winston.info('Token stored to ' + TOKEN_PATH, { source: 'youtube' });
 }
 
 function getLiveBroadcast() {
@@ -150,7 +151,7 @@ function getLiveBroadcast() {
             broadcastType: 'all'
         }, function(error, response) {
             if (error) {
-                winston.error('The API returned an error: ' + error);
+                winston.error('The API returned an error: ' + error, { source: 'youtube' });
                 getNewToken();
                 apiError = true;
             } else {
@@ -158,9 +159,9 @@ function getLiveBroadcast() {
                 if (liveBroadcasts.length > 0) {
                     noLiveBroadcastFound = false;
                     var liveBroadcast = liveBroadcasts[0];
-                    winston.info('Live broadcast found');
-                    winston.info('Title: ' + liveBroadcast.snippet.title);
-                    winston.info('Description: ' + liveBroadcast.snippet.description);
+                    winston.info('Live broadcast found', { source: 'youtube' });
+                    winston.info('Title: ' + liveBroadcast.snippet.title, { source: 'youtube' });
+                    winston.info('Description: ' + liveBroadcast.snippet.description, { source: 'youtube' });
 
                     _liveChatId = liveBroadcast.snippet.liveChatId;
                     isLive = true;
@@ -168,7 +169,7 @@ function getLiveBroadcast() {
                 else if (noLiveBroadcastFound == false)
                 {
                     noLiveBroadcastFound = true;
-                    winston.error('No broadcast live detected');
+                    winston.error('No broadcast live detected', { source: 'youtube' });
                 }
             }
         });
@@ -198,7 +199,7 @@ function getChatMessages() {
         liveChatId: _liveChatId
     }, function(error, response) {
         if (error) {
-            winston.error('The API returned an error: ' + error);
+            winston.error('The API returned an error: ' + error, { source: 'youtube' });
             refreshToken();
             return;
         }
