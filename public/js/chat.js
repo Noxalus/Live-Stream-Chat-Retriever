@@ -89,6 +89,27 @@ Chat = {
           console.log('Connected to: ' + url);
       });
 
+      socket.on('oldChatMessages', function(data) {
+          if (!Chat.vars.gotOldChatMessages) {
+            Chat.vars.gotOldChatMessages = true;
+
+            data.forEach(function(elt) {
+                Chat.insert(elt)
+            });
+          }
+      });
+
+      socket.on('oldSystemMessages', function(data) {
+          if (!Chat.vars.gotOldSystemMessages) {
+              Chat.vars.gotOldSystemMessages = true;
+
+              data.forEach(function(elt) {
+                console.log('New system message', elt);
+                System.handleMessage(elt);
+              });
+          }
+      });
+
       socket.on('newChatMessage', function(data) {
           console.log('New message', data);
           Chat.insert(data)
@@ -143,6 +164,8 @@ Chat = {
       Chat.vars.queue.push($newLine.wrap('<div>').parent().html());
   },
   vars: {
+      gotOldChatMessages: false,
+      gotOldSystemMessages: false,
       queue: [],
       queueTimer: setInterval(function() {
           if(Chat.vars.queue.length > 0) {

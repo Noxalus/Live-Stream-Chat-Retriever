@@ -57,14 +57,10 @@ function run(config) {
 
         // Send only the last 10 messages
         chatMessagesToSend = chatMessages.slice(Math.max(chatMessages.length - 10, 0));
-        chatMessagesToSend.forEach(function(elt) {
-            io.emit('newChatMessage', elt);                
-        });
+        io.emit('oldChatMessages', chatMessagesToSend);                
 
         // Send system messages
-        systemMessages.forEach(function(elt) {
-            io.emit('newSystemMessage', elt);                
-        });
+        io.emit('oldSystemMessages', systemMessages);                
     });
 
     app.get('/', function(req, res) {
