@@ -156,6 +156,9 @@ Chat = {
           }
       }
 
+      if (data.source == 'youtube')
+        message = jEmoji.unifiedToHTML(message);
+
       var $formattedMessage = $('<span></span>');
       $formattedMessage.addClass('message');
       $formattedMessage.html(message);
