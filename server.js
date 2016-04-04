@@ -36,6 +36,7 @@ var twitchApi = require('./api/twitch-api');
 var chatMessageId = 0;
 var chatMessages = [];
 var systemMessages = [];
+var maxMessagesStored = 100;
 
 function run(config) {
     // Initialize all APIs
@@ -108,10 +109,17 @@ function run(config) {
 
                         chatMessages.push(elt);
 
+                        // Make sure to keep less than the maximum allowed
+                        if (chatMessages.length > maxMessagesStored)
+                            chatMessages.shift();
+
                         io.emit('newChatMessage', elt);
                     }
                     else if (elt.type == 'system') {
                         systemMessages.push(elt);
+
+                        if (systemMessages.length > maxMessagesStored)
+                            systemMessages.shift();
 
                         io.emit('newSystemMessage', elt);
                     }        
