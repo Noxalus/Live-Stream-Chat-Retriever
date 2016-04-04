@@ -45,17 +45,19 @@ System = {
 
     switch (data.source) {
       case 'youtube':
+        var youtubeStatus = $('#youtube-status');
+
         switch(type) {
           case 'auth-url':
             console.log('You need to generate a new auth Token with this link: ' + value);
-
-            var youtubeStatus = $('#youtube-status');
             youtubeStatus.html('<a href="' + value + '">YOUTUBE</a>');
             break;
+          case 'error':
+            console.log('Youtube API error' + value);
+            youtubeStatus.attr('title', value);
+            break
           case 'ready':
             console.log('Youtube API is ready');
-
-            var youtubeStatus = $('#youtube-status');
             youtubeStatus.addClass('ready');
             break;
         }

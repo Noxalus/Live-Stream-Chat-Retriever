@@ -169,7 +169,16 @@ function getLiveBroadcast() {
                 else if (noLiveBroadcastFound == false)
                 {
                     noLiveBroadcastFound = true;
-                    winston.error('No broadcast live detected', { source: 'youtube' });
+                    var errorMessage = 'No broadcast live detected';
+
+                    winston.error(errorMessage, { source: 'youtube' });
+
+                    _newMessages.push({
+                        type: 'system',
+                        source: 'youtube',
+                        date: new Date().getTime(),
+                        message: 'error|' + errorMessage
+                    });
                 }
             }
         });
