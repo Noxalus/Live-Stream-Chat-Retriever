@@ -31,10 +31,16 @@ function initialize(config) {
             _newMessages.push(chatMessage);
         });
     });
+
+    // hitbox-chat lib can throw exceptions into asynchronous functions
+    // we don't want that the server crashes, so we handle them here
+    process.on('uncaughtException', function(err) {
+        winston.error(err, { source: 'hitbox' });
+    })
 }
 
 function ready() {
-    winston.info('Hitbox API is ready to use', { source: 'hitbox' });
+    winston.info('Hitbox API is ready to use (connected to ' + _config.channel + ')', { source: 'hitbox' });
     _isReady = true;
 
     _newMessages.push({

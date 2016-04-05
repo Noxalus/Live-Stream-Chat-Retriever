@@ -43,7 +43,7 @@ function initialize(config) {
 }
 
 function ready() {
-    winston.info('Twitch API is ready to use', { source: 'twitch' });
+    winston.info('Twitch API is ready to use (connected to ' + _config.channel + ')', { source: 'twitch' });
     _isReady = true;
 
     _newMessages.push({
