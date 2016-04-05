@@ -6,6 +6,7 @@ var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
 var winston = require('winston');
+var ipfilter = require('express-ipfilter');
 
 // Setup the logger
 winston.addColors({
@@ -52,6 +53,11 @@ function run(config) {
 
     var app = express();
     app.use(express.static('public'));
+    console.log(config.whitelisted_ips);
+    app.use(ipfilter(config.whitelisted_ips, {
+        mode: 'allow',
+        logF: winston.info
+    }));
 
     var server = http.Server(app);
     var io = socketio(server);
