@@ -11,6 +11,10 @@
         "twitch": {
             "enabled": true,
             "channel": "MY_CHANNEL"
+        },
+        "hitbox": {
+            "enabled": true,
+            "channel": "MY_CHANNEL"
         }
     }
 }

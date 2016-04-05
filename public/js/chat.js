@@ -72,6 +72,16 @@ System = {
             break;
         }
         break;
+      case 'hitbox':
+        switch(type) {
+          case 'ready':
+            console.log('Hitbox API is ready');
+
+            var twitchStatus = $('#hitbox-status');
+            twitchStatus.addClass('ready');
+            break;
+        }
+        break;
     }
   }
 };

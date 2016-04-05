@@ -1,6 +1,4 @@
-var fs = require('fs');
-var readline = require('readline');
-var irc = require("tmi.js");
+var irc = require('tmi.js');
 var winston = require('winston');
 
 var _config = null;

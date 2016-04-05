@@ -32,6 +32,7 @@ winston.add(winston.transports.File, {
 
 var youtubeApi = require('./api/youtube-api');
 var twitchApi = require('./api/twitch-api');
+var hitboxApi = require('./api/hitbox-api');
 
 var chatMessageId = 0;
 var chatMessages = [];
@@ -45,6 +46,9 @@ function run(config) {
 
     if (config.live_data.twitch.enabled)
         twitchApi.initialize(config);
+
+    if (config.live_data.hitbox.enabled)
+        hitboxApi.initialize(config);
 
     var app = express();
     app.use(express.static('public'));
@@ -93,6 +97,12 @@ function run(config) {
 
             if (config.live_data.twitch.enabled && twitchApi.isReady()) {
                 twitchApi.getNewMessages().forEach(function(elt) { 
+                    newMessages.push(elt); 
+                });
+            }
+
+            if (config.live_data.hitbox.enabled && hitboxApi.isReady()) {
+                hitboxApi.getNewMessages().forEach(function(elt) { 
                     newMessages.push(elt); 
                 });
             }

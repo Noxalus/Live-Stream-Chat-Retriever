@@ -10,6 +10,7 @@ The purpose of this project is to display an HTML page that will retrieve all ch
 Supported services:
 * [Youtube Gaming](https://gaming.youtube.com/)
 * [Twitch](https://www.twitch.tv/)
+* [Hitbox](https://www.hitbox.tv/)
 
 ## Prerequisites
 
@@ -17,7 +18,7 @@ You need to install [Node.js](https://nodejs.org/en/download/) and launch `npm i
 
 ## Usage
 
-Rename the *config-template.json* file to **config.json** and complete the missing information with yours.
+Rename the *config.template.json* file to **config.json** and complete the missing information with yours.
 
 To find your Youtube *client_id* and *client_secret*, you need to create OAuth 2.0 credientials. The [official documentation](https://developers.google.com/youtube/registering_an_application) explains how to do that. Please make sure that you added all redirect URIs from the **redirect_uris** array into your application when you create your OAuth 2.0 credentials.
 
