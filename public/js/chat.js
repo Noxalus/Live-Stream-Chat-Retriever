@@ -106,7 +106,8 @@ Chat = {
             Chat.vars.gotOldChatMessages = true;
 
             data.forEach(function(elt) {
-                Chat.insert(elt)
+                if (Chat.vars.startTime - elt.date < Chat.vars.displayTime)
+                  Chat.insert(elt)
             });
           }
       });
@@ -176,6 +177,7 @@ Chat = {
       Chat.vars.queue.push($newLine.wrap('<div>').parent().html());
   },
   vars: {
+      startTime: Date.now(),
       gotOldChatMessages: false,
       gotOldSystemMessages: false,
       queue: [],
