@@ -1,11 +1,12 @@
-var fs = require('fs');
-var readline = require('readline');
+var http = require('https');
 var hitbox = require('hitbox-chat');
 var winston = require('winston');
 
 var _config = null;
 var _isReady = false;
 var _newMessages = [];
+var _colors = ['000000'];
+var _userColorsMap = {};
 
 function initialize(config) {
     _config = config.live_data.hitbox;
@@ -20,12 +21,19 @@ function initialize(config) {
         });
 
         channel.on("chat", function (author, message, role) {
+            if (!(author in _userColorsMap) ||
+                (author in _userColorsMap && _userColorsMap[author] == '000000' && _colors.length > 1))
+            {
+                _userColorsMap[author] = _colors[Math.floor(Math.random() * _colors.length)];
+            }
+
             var chatMessage = {
                 type: 'chat',
                 author: author,
                 message: message,
                 source: 'hitbox',
-                date: new Date().getTime()
+                date: new Date().getTime(),
+                color: '#' + _userColorsMap[author]
             };
 
             _newMessages.push(chatMessage);
@@ -48,6 +56,18 @@ function ready() {
         source: 'hitbox',
         date: new Date().getTime(),
         message: 'ready'
+    });
+
+    // Get available colors
+    http.get('https://api.hitbox.tv/chat/colors', (res) => {
+        res.setEncoding('utf8');
+        res.on('data', (chunk) => {
+            var json = JSON.parse(chunk);
+            if (json && json.colors)
+                _colors = _colors.concat(json.colors);
+        })
+    }).on('error', (e) => {
+        winston.error(e.message, { source: 'hitbox' });
     });
 }
 
