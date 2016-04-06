@@ -16,7 +16,7 @@ body {
     border-radius: 4px;
     width: calc(100% - 10px);
     -webkit-mask-image:-webkit-gradient(linear,left 10%,left top,from(rgba(0,0,0,1)),to(rgba(0,0,0,0)));
-    -webkit-mask-image:-webkit-gradient(linear,left 20%,left top,from(rgba(0,0,0,1)),to(rgba(0,0,0,0)))
+    -webkit-mask-image:-webkit-gradient(linear,left 20%,left top,from(rgba(0,0,0,1)),to(rgba(0,0,0,0)));
 }
 
 .chat-line {
@@ -26,7 +26,7 @@ body {
     padding-bottom: 3px;
     font-size:18px;
     line-height:21px;
-    background-color:rgba(127,127,127,0.00)
+    background-color:rgba(127,127,127,0.00);
 }
 
 .chat-line .message {
@@ -34,7 +34,7 @@ body {
     color:#fff;
     font-weight:700;
     line-height:21px;
-    text-shadow:0 0 1px #666,1px 1px 0 #000
+    text-shadow:0 0 1px #666,1px 1px 0 #000;
 }
 
 .chat-line .author{
@@ -42,7 +42,12 @@ body {
     color:#000;
     font-weight:700;
     line-height:21px;
-    text-shadow:0 0 1px #666,1px 1px 0 #000
+    text-shadow:0 0 1px #666,1px 1px 0 #000;
+    display: inline-block;
+}
+
+.chat-line .colon {
+    display: inline-block;
 }
 
 .chat-line .source_icon {
