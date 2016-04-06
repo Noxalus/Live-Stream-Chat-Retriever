@@ -66,9 +66,7 @@ System = {
         switch(type) {
           case 'ready':
             console.log('Twitch API is ready');
-
-            var twitchStatus = $('#twitch-status');
-            twitchStatus.addClass('ready');
+            $('#twitch-status').addClass('ready');
             break;
         }
         break;
@@ -76,9 +74,15 @@ System = {
         switch(type) {
           case 'ready':
             console.log('Hitbox API is ready');
-
-            var twitchStatus = $('#hitbox-status');
-            twitchStatus.addClass('ready');
+          $('#hitbox-status').addClass('ready');
+            break;
+        }
+        break;
+      case 'beam':
+        switch(type) {
+          case 'ready':
+            console.log('Beam API is ready');
+            $('#beam-status').addClass('ready');
             break;
         }
         break;

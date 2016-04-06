@@ -11,6 +11,7 @@ Supported services:
 * [Youtube Gaming](https://gaming.youtube.com/)
 * [Twitch](https://www.twitch.tv/)
 * [Hitbox](https://www.hitbox.tv/)
+* [Beam](https://www.beam.pro/)
 
 ## Prerequisites
 

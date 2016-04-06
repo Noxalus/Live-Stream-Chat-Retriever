@@ -34,6 +34,7 @@ winston.add(winston.transports.File, {
 var youtubeApi = require('./api/youtube-api');
 var twitchApi = require('./api/twitch-api');
 var hitboxApi = require('./api/hitbox-api');
+var beamApi = require('./api/beam-api');
 
 var chatMessageId = 0;
 var chatMessages = [];
@@ -50,6 +51,9 @@ function run(config) {
 
     if (config.live_data.hitbox.enabled)
         hitboxApi.initialize(config);
+
+    if (config.live_data.beam.enabled)
+        beamApi.initialize(config);
 
     var app = express();
     app.use(express.static('public'));
@@ -109,6 +113,12 @@ function run(config) {
 
             if (config.live_data.hitbox.enabled && hitboxApi.isReady()) {
                 hitboxApi.getNewMessages().forEach(function(elt) { 
+                    newMessages.push(elt); 
+                });
+            }
+
+            if (config.live_data.beam.enabled && beamApi.isReady()) {
+                beamApi.getNewMessages().forEach(function(elt) { 
                     newMessages.push(elt); 
                 });
             }

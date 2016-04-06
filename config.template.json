@@ -19,6 +19,11 @@
         "hitbox": {
             "enabled": true,
             "channel": "MY_CHANNEL"
+        },
+        "beam": {
+            "enabled": true,
+            "username": "MY_USERNAME",
+            "password": "MY_PASSWORD"
         }
     }
 }
