@@ -24,6 +24,11 @@
             "enabled": true,
             "username": "MY_USERNAME",
             "password": "MY_PASSWORD"
+        },
+        "dailymotion": {
+            "enabled": true,
+            "channel_id": "MY_CHANNEL_ID",
+            "grosminet_endpoint": "http://dmchat.dailymotion.com:80"
         }
     }
 }
