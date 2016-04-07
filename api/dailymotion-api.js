@@ -8,7 +8,7 @@ var _newMessages = [];
 function initialize(config) {
     _config = config.live_data.dailymotion;
 
-    var url = _config.grosminet_endpoint + '/rooms/DailymotionAPI-' + _config.channel_id;
+    var url = _config.grosminet_endpoint + '/rooms/' + _config.room;
     var es = new eventsource(url);
 
     es.addEventListener('open', function (data) {

@@ -27,7 +27,7 @@
         },
         "dailymotion": {
             "enabled": true,
-            "channel_id": "MY_CHANNEL_ID",
+            "romm": "MY_ROOM",
             "grosminet_endpoint": "http://dmchat.dailymotion.com:80"
         }
     }
