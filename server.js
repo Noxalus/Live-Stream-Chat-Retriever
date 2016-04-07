@@ -35,6 +35,7 @@ var youtubeApi = require('./api/youtube-api');
 var twitchApi = require('./api/twitch-api');
 var hitboxApi = require('./api/hitbox-api');
 var beamApi = require('./api/beam-api');
+var dailymotionApi = require('./api/dailymotion-api');
 
 var chatMessageId = 0;
 var chatMessages = [];
@@ -55,9 +56,11 @@ function run(config) {
     if (config.live_data.beam.enabled)
         beamApi.initialize(config);
 
+    if (config.live_data.dailymotion.enabled)
+        dailymotionApi.initialize(config);
+
     var app = express();
     app.use(express.static('public'));
-    console.log(config.whitelisted_ips);
     app.use(ipfilter(config.whitelisted_ips, {
         mode: 'allow',
         logF: winston.info
@@ -119,6 +122,12 @@ function run(config) {
 
             if (config.live_data.beam.enabled && beamApi.isReady()) {
                 beamApi.getNewMessages().forEach(function(elt) { 
+                    newMessages.push(elt); 
+                });
+            }
+
+            if (config.live_data.dailymotion.enabled && dailymotionApi.isReady()) {
+                dailymotionApi.getNewMessages().forEach(function(elt) { 
                     newMessages.push(elt); 
                 });
             }

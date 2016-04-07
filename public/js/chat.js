@@ -86,6 +86,14 @@ System = {
             break;
         }
         break;
+      case 'dailymotion':
+        switch(type) {
+          case 'ready':
+            console.log('Dailymotion API is ready');
+            $('#dailymotion-status').addClass('ready');
+            break;
+        }
+        break;
     }
   }
 };

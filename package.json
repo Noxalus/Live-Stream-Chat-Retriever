@@ -1,11 +1,12 @@
 {
   "name": "live-stream-chat-retriever",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Retrieve live streams chat messages from different sources (Twitch, YouTube Gaming, etc...)",
   "author": "Noxalus",
   "dependencies": {
     "async": "^2.0.0-rc.1",
     "beam-client-node": "^0.3.0",
+    "eventsource": "^0.2.1",
     "express": "^4.10.2",
     "express-ipfilter": "0.0.25",
     "google-auth-library": "^0.9.7",

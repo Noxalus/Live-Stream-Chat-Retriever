@@ -1,4 +1,3 @@
-var http = require('https');
 var winston = require('winston');
 var beam = require('beam-client-node');
 var beamsocket = require('beam-client-node/lib/ws');
