@@ -46,19 +46,35 @@ System = {
     switch (data.source) {
       case 'youtube':
         var youtubeStatus = $('#youtube-status');
+        
+        if (youtubeStatus.parent().is('a'))
+          youtubeStatus.unwrap();
+
+        youtubeStatus.removeAttr('title');
 
         switch(type) {
           case 'auth-url':
             console.log('You need to generate a new auth Token with this link: ' + value);
-            youtubeStatus.html('<a href="' + value + '">YOUTUBE</a>');
+            youtubeStatus.wrap('<a href="' + value + '"></a>');
             break;
           case 'error':
-            console.log('Youtube API error' + value);
+            console.log('Youtube API error: ' + value);
             youtubeStatus.attr('title', value);
             break
           case 'ready':
-            console.log('Youtube API is ready');
-            youtubeStatus.addClass('ready');
+            value = (value === 'true');
+            // console.log(value + ' == true', value == true);
+            // console.log(isTrueSet);
+            if (value)
+            {
+              console.log('Youtube API is ready');
+              youtubeStatus.addClass('ready');
+            }
+            else
+            {
+              console.log('Youtube API is not ready');
+              youtubeStatus.removeClass('ready');
+            }
             break;
         }
         break;
