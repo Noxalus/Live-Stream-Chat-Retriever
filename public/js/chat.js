@@ -134,7 +134,7 @@ Chat = {
             Chat.vars.gotOldChatMessages = true;
 
             data.forEach(function(elt) {
-                if (Chat.vars.startTime - elt.date < Chat.vars.displayTime)
+                if (Chat.vars.displayTime == 0 || Chat.vars.startTime - elt.date < Chat.vars.displayTime)
                   Chat.insert(elt)
             });
           }
@@ -165,7 +165,7 @@ Chat = {
   },
   insert: function(data) {
       var $newLine = $('<div></div>');
-      $newLine.addClass('chat-line');
+      $newLine.addClass('chat-line animated zoomIn');
 
       $newLine.attr('data-timestamp', data.date);
 

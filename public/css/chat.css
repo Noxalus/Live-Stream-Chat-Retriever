@@ -15,8 +15,6 @@ body {
     color: #D3D3D3;
     border-radius: 4px;
     width: calc(100% - 10px);
-    -webkit-mask-image:-webkit-gradient(linear,left 10%,left top,from(rgba(0,0,0,1)),to(rgba(0,0,0,0)));
-    -webkit-mask-image:-webkit-gradient(linear,left 20%,left top,from(rgba(0,0,0,1)),to(rgba(0,0,0,0)));
 }
 
 .chat-line {
