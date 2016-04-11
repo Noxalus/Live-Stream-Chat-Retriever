@@ -85,12 +85,9 @@ function run(config) {
         res.sendFile(path.join(__dirname, '/public/chat.html'));
     });
 
-    config.live_data.youtube.redirect_uris.forEach(function(elt) {
-        var endpoint = elt.replace(config.host + ':' + config.port, '');
-        app.get(endpoint, function(req, res){
-          youtubeApi.getToken(req.query.code);
-          res.redirect('/');
-        });
+    app.get(config.live_data.youtube.redirect_url, function(req, res){
+      youtubeApi.getToken(req.query.code);
+      res.redirect('/');
     });
 
     server.listen(config.port, function() {

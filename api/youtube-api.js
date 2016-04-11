@@ -1,7 +1,6 @@
 var fs = require('fs');
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
-var opener = require('opener');
 var winston = require('winston');
 
 var SCOPES = [
@@ -12,6 +11,7 @@ var SCOPES = [
 var TOKEN_DIR = '.credentials/';
 var TOKEN_PATH = TOKEN_DIR + 'youtube-credentials.json';
 
+var _config = null;
 var _youtube = google.youtube('v3');
 var _liveChatId = '';
 var _isReady = false;
@@ -35,6 +35,7 @@ function getRandomColor() {
 }
 
 function initialize(config) {
+    _config = config;
     authorize(config);
 }
 
@@ -59,9 +60,9 @@ function isReady() {
 function authorize(credentials) {
     var clientSecret = credentials.live_data.youtube.client_secret;
     var clientId = credentials.live_data.youtube.client_id;
-    var redirectUrl = credentials.live_data.youtube.redirect_uris[0];
-    var auth = new googleAuth();
+    var redirectUrl = _config.host + ':' + _config.port + credentials.live_data.youtube.redirect_url;
 
+    var auth = new googleAuth();
     _auth = new auth.OAuth2(clientId, clientSecret, redirectUrl);
 
     // Check if we have previously stored a token.
@@ -85,7 +86,7 @@ function getNewToken() {
     });
 
     winston.info('Please select your Youtube account to get a token and use the API.', { source: 'youtube' });
-    // opener(authUrl);
+
     _newMessages.push({
         type: 'system',
         source: 'youtube',

@@ -10,7 +10,7 @@
             "enabled": true,
             "client_id": "MY_CLIENT_ID",
             "client_secret": "MY_CLIENT_SECRET",
-            "redirect_uris": ["http://localhost:4242/youtube/callback"]
+            "redirect_uris": "/youtube/callback"
         },
         "twitch": {
             "enabled": true,
@@ -27,7 +27,7 @@
         },
         "dailymotion": {
             "enabled": true,
-            "romm": "MY_ROOM",
+            "room": "MY_ROOM",
             "grosminet_endpoint": "http://dmchat.dailymotion.com:80"
         }
     }
