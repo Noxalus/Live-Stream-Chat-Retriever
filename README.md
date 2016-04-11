@@ -22,7 +22,7 @@ You need to install [Node.js](https://nodejs.org/en/download/) and launch `npm i
 
 Rename the *config.template.json* file to **config.json** and complete the missing information with yours.
 
-To find your Youtube *client_id* and *client_secret*, you need to create OAuth 2.0 credientials. The [official documentation](https://developers.google.com/youtube/registering_an_application) explains how to do that. Please make sure that you added all redirect URIs from the **redirect_uris** array into your application when you create your OAuth 2.0 credentials.
+If you need more information about how to fill this config file, please read the [corresponding part](https://github.com/Noxalus/Live-Stream-Chat-Retriever/wiki/Configuration-file) from the wiki.
 
 Once that is done, you can run this command from the root folder: ``npm start``
 
