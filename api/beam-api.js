@@ -68,7 +68,7 @@ function initializeSocket() {
 }
 
 function ready() {
-    winston.info('Beam API is ready to use (connected to ' + _config.channel + ')', { source: 'beam' });
+    winston.info('Beam API is ready to use (connected to ' + _config.username + ')', { source: 'beam' });
     _isReady = true;
 
     _newMessages.push({
