@@ -146,6 +146,7 @@ Chat = {
 
       console.log('Display time: ' + Chat.vars.displayTime);
       console.log('Max messages: ' + Chat.vars.maxMessages);
+      console.log('Max height: ' + Chat.vars.maxHeight);
   },
   insert: function(data) {
       var $newLine = $('<div></div>');
@@ -200,6 +201,34 @@ Chat = {
               Chat.vars.queue = [];
               $('#chat-box').append(newLines);
 
+              // If the max height has been reached, we clean all messages
+              var totalHeight = Chat.vars.maxHeight;
+              var currentHeight = $('#chat-box').outerHeight(true) + 5;
+              var count = 0;
+              var $chatLine, lineHeight;
+
+              if (currentHeight > totalHeight) {
+                while(currentHeight > totalHeight) {
+                    $chatLine = $('.chat-line').eq(count);
+                    lineHeight = $chatLine.height();
+
+                    $chatLine.animate(
+                        {
+                            "margin-top": -lineHeight
+                        },
+                        100,
+                        function() {
+                            $(this).remove();
+                        }
+                    );
+
+                    currentHeight -= lineHeight;
+                    count++;
+                }
+
+                return;
+              }
+
               $('#chat-box')[0].scrollTop = $('#chat-box')[0].scrollHeight;
 
               // There are more messages than the maximum allowed
@@ -226,7 +255,8 @@ Chat = {
           }
       }, 250),
       displayTime: getParameterByName('display_time') || 60,
-      maxMessages: getParameterByName('max_messages') || 10
+      maxMessages: getParameterByName('max_messages') || 10,
+      maxHeight: getParameterByName('max_height') || 500
   }
 };
 
