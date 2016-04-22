@@ -10,7 +10,7 @@
             "enabled": true,
             "client_id": "MY_CLIENT_ID",
             "client_secret": "MY_CLIENT_SECRET",
-            "redirect_uris": "/youtube/callback"
+            "redirect_url": "/youtube/callback"
         },
         "twitch": {
             "enabled": true,
