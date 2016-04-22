@@ -27,3 +27,7 @@ If you need more information about how to fill this config file, please read the
 Once that is done, you can run this command from the root folder: ``npm start``
 
 Then, you should see the chat messages if you browse to [*http://localhost:4242*](http://localhost:4242).
+
+## Known issue
+
+* Beam socket seems to disconnect after an undefined amount of time
