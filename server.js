@@ -85,10 +85,13 @@ function run(config) {
         res.sendFile(path.join(__dirname, '/public/chat.html'));
     });
 
-    app.get(config.live_data.youtube.redirect_url, function(req, res){
-      youtubeApi.getToken(req.query.code);
-      res.redirect('/');
-    });
+
+    if (config.live_data.youtube.enabled && config.live_data.youtube.redirect_url) {
+        app.get(config.live_data.youtube.redirect_url, function(req, res){
+          youtubeApi.getToken(req.query.code);
+          res.redirect('/');
+        });
+    }
 
     server.listen(config.port, function() {
         winston.info('listening on *: ' + config.port);
