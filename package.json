@@ -12,6 +12,7 @@
     "google-auth-library": "^0.9.7",
     "googleapis": "^5.2.0",
     "hitbox-chat": "^0.1.5",
+    "mkdirp": "^0.5.1",
     "socket.io": "^1.4.5",
     "tmi.js": "^0.0.28",
     "winston": "^2.2.0"
