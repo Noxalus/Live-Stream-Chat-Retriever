@@ -13,7 +13,6 @@ function initialize(config) {
             debug: false
         },
         connection: {
-            cluster: "aws",
             reconnect: true
         },
         channels: [_config.channel]
