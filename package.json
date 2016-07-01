@@ -14,7 +14,7 @@
     "hitbox-chat": "^0.1.5",
     "mkdirp": "^0.5.1",
     "socket.io": "^1.4.5",
-    "tmi.js": "^0.0.28",
+    "tmi.js": "^1.1.1",
     "winston": "^2.2.0"
   }
 }
