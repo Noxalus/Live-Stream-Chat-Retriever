@@ -15,7 +15,7 @@ Supported services:
 * [Twitch](https://www.twitch.tv/)
 * [Hitbox](https://www.hitbox.tv/)
 * [Beam](https://www.beam.pro/)
-* [Dailymotion Games](https://www.beam.pro/)
+* [Dailymotion Games](http://games.dailymotion.com/)
 
 ## Prerequisites
 
