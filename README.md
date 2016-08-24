@@ -1,4 +1,7 @@
 # Live Stream Chat Retriever
+
+![](https://david-dm.org/Noxalus/Live-Stream-Chat-Retriever.svg)
+
 Retrieve live streams chat messages from different sources (Twitch, YouTube Gaming, Dailymotion, etc...).
 
 If you have an optical fiber connection, you might want to send your live streams to multiple services to reach a wider audience. But in this case, if you want to display the chat on your stream, you need to make a choice.
