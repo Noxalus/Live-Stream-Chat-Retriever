@@ -36,7 +36,7 @@ function initializeSocket() {
 
     // You don't need to wait for the socket to connect before calling methods,
     // we spool them and run them when connected automatically!
-    socket.call('auth', [_userData.channel.id, _userData.id, _chatData.authkey]).then(function () {
+    socket.auth(_userData.channel.id, _userData.id, _chatData.authkey).then(function () {
         ready();
     }).catch(function (err) {
         winston.error('Oh no! An error occurred trying to connect to the chat web socket!', { source: 'beam' });
