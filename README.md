@@ -1,6 +1,6 @@
 # Live Stream Chat Retriever
 
-![](https://david-dm.org/Noxalus/Live-Stream-Chat-Retriever.svg)
+[![](https://david-dm.org/Noxalus/Live-Stream-Chat-Retriever.svg)](https://david-dm.org/Noxalus/Live-Stream-Chat-Retriever)
 
 Retrieve live streams chat messages from different sources (Twitch, YouTube Gaming, Dailymotion, etc...).
 
