@@ -3,7 +3,8 @@
     "port": 4242,
     "whitelisted_ips": [
         "127.0.0.1",
-        "::1"
+        "::1",
+        "::ffff:127.0.0.1"
     ],
     "live_data": {
         "youtube": {
