@@ -135,7 +135,10 @@ function storeToken(token) {
         }
     }
 
-  fs.writeFile(TOKEN_PATH, JSON.stringify(token));
+  fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
+    if (err)
+      console.log(err);
+    });
   winston.info('Token stored to ' + TOKEN_PATH, { source: 'youtube' });
 }
 
